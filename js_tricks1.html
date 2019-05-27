@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.css">
+<style>
+.column {
+  float: left;
+  width: 33.33%;
+  padding: 5px;
+}
+</style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"></script>
+</head>
+<body>
+<h1>Statistics</h1>
+Diff = <span id="diff">  </span> ms.
+PlotTime = <span id="plot">  </span> ms.
+<br/>
+Diff Avg.= <span id="diff_avg">  </span> ms.
+PlotTime Avg.= <span id="plot_avg">  </span> ms.
+<br/>
+<span id="timestamp">  </span> ms.
+<h1>Controls</h1>
+<input type="button" id="start_btn" value="Start" onclick="start();">
+<input type="button" id="stop_btn" value="Stop" onclick="stop();">
+<h1>Histograms</h1>
+<canvas class="column" id="delay_data" width="200" height="200"></canvas>
+<canvas class="column" id="plot_data" width="200" height="200"></canvas>
+
+<script>
+window.onload = print_date;
+var old_time = Date.now();
+var running = true;
+document.getElementById("start_btn").disabled = true;
+document.getElementById("stop_btn").disabled = false;
+
+function str_round(num) {
+    return (Math.round(num * 100) / 100).toString();
+};
+function buttons() {
+    document.getElementById("start_btn").disabled = running;
+    document.getElementById("stop_btn").disabled = !running;
+};
+
+function plot(hdata, canvas_id){
+    var ctx = document.getElementById(canvas_id).getContext('2d');
+    ctx.canvas.width = 200;
+    ctx.canvas.height = 200;
+    var chart = new Chart(ctx, {
+        // The type of chart we want to create
+        type: 'bar',
+        // The data for our dataset
+        data: {
+            labels: hdata.labels(),
+            datasets: [{
+                label: hdata.name,
+                backgroundColor: 'rgb(255, 99, 132)',
+                borderColor: 'rgb(255, 99, 132)',
+                data: hdata.data()
+            }]
+        },
+        // Configuration options go here
+        options: {
+            responsive: false,
+            maintainAspectRatio: true,
+            elements: {
+                line: {
+                    tension: 0 // disables bezier curves
+                }
+            },
+            animation: {
+                duration: 0 // general animation time
+            },
+            hover: {
+                animationDuration: 0 // duration of animations when hovering an item
+            },
+            responsiveAnimationDuration: 0, // animation duration after a resize
+            scales: {
+                xAxes: [{
+                    display: true,
+                    barPercentage: 1.30,
+                }],
+                yAxes: [{
+                    ticks: {
+                        beginAtZero:true
+                    }
+                }]
+            }
+        }
+    });
+};
+
+function Hdata(name, min, max, nbins = 15) {
+    this.min = min;
+    this.max = max;
+    this.name = name;
+    // 0 and nbins-1 bins are for underflow and overflow;
+    this._data = Array.apply(null, new Array(nbins +2 )).map(Number.prototype.valueOf,0);
+    this._sum = 0;
+    this._m = nbins / (max - min);
+    this._labels = new Array(nbins+2);
+    for (var i = 1; i <= nbins; i++) {
+        this._labels[i] = this.min + (i - 1) / this._m;
+    }
+    this._labels[0] = "UNDERFLOW";
+    this._labels[nbins + 1] = "OVERFLOW";
+};
+
+
+Hdata.prototype.entries = function(overflow = false) {
+    if (overflow) {
+        return this._data.slice().reduce((a, b) => a + b, 0); //shallow copy
+    }
+    return this._data.slice(1, this._data.length-1).reduce((a, b) => a + b, 0); //shallow copy
+};
+
+Hdata.prototype.average = function(overflow = false) {
+    return this._sum / this.entries(true);
+}
+
+Hdata.prototype.labels = function(overflow = false) {
+    if (overflow) {
+        return this._labels.map(str_round);
+    }
+    return this._labels.slice(1, this._labels.length-1).map(str_round); //shallow copy
+};
+
+Hdata.prototype.data = function() {
+  return this._data.slice(1, this._data.length-1);
+}
+
+Hdata.prototype.add = function(value) {
+    bin = Math.floor(1 + (value - this.min) * this._m);
+    if (bin < 1) { // underflow
+        bin = 0;
+    }
+    if (bin  >= this._data.length -1) { // overflow
+        bin = this._data.length - 1;
+    }
+    this._data[bin] +=1;
+    this._sum += value;
+    return bin;
+};
+
+var plot_data = new Hdata("Plot Delay", 5, 100);
+var delay_data = new Hdata("Timer Difference", 0, 10, 10);
+var timer = null;
+
+function start() {
+    running = true;
+    buttons();
+    if (timer == null) {
+        print_date();
+    } 
+}
+
+function stop() {
+    running = false;
+    buttons();
+    if (timer) {
+        clearTimeout(timer);
+        timer = null;
+    }
+}
+
+function print_date() {
+    var text = document.getElementById("timestamp");
+    var diff = document.getElementById("diff");
+    var interval = 300;
+    var tnow = Date.now();
+    text.innerHTML = tnow;
+    t = tnow - interval - old_time;
+    diff.innerHTML = t;
+    if (timer) {
+        delay_data.add(t);
+    }
+    old_time = Date.now();
+    if (running) {
+        timer = setTimeout(print_date, interval);
+    }
+    plot(delay_data, "delay_data");
+    plot(plot_data, "plot_data");
+    diff = document.getElementById("diff_avg");
+    var pt = document.getElementById("plot_avg");
+    diff.innerHTML = str_round(delay_data.average());
+    pt.innerHTML = str_round(plot_data.average());
+
+    pt = document.getElementById("plot");
+    t = Date.now() - tnow;
+    pt.innerHTML = t;
+    if (timer) {
+        plot_data.add(t);
+    }
+};
+
+</script>
+</body>
+</html>

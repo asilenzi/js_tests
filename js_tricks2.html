@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.css">
+  <script src="https://cdn.rawgit.com/fnando/sparkline/master/dist/sparkline.js
+"></script>
+<style>
+.column {
+  float: left;
+  width: 33.33%;
+  padding: 5px;
+}
+</style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"></script>
+</head>
+<body>
+<h1>Statistics</h1>
+Diff = <span id="diff">  </span> ms.
+PlotTime = <span id="plot">  </span> ms.
+<span id="timestamp">  </span> ms.
+<h1>Controls</h1>
+<input type="button" id="start_btn" value="Start" onclick="start();">
+<input type="button" id="stop_btn" value="Stop" onclick="stop();">
+<h1>Spark lines</h1>
+
+<div>
+  <svg id="sparkline" class="sparkline" width="300" height="100" stroke-width="3"></svg>
+</div>
+
+<script>
+window.onload = print_date;
+var old_time = Date.now();
+var running = true;
+document.getElementById("start_btn").disabled = true;
+document.getElementById("stop_btn").disabled = false;
+
+function buttons() {
+    document.getElementById("start_btn").disabled = running;
+    document.getElementById("stop_btn").disabled = !running;
+};
+
+var timer = null;
+var data = Array.apply(null, new Array(15)).map(Number.prototype.valueOf,0);
+
+function start() {
+    running = true;
+    buttons();
+    if (timer == null) {
+        print_date();
+    } 
+}
+
+function stop() {
+    running = false;
+    buttons();
+    if (timer) {
+        clearTimeout(timer);
+        timer = null;
+    }
+}
+
+function print_date() {
+
+    var sl = document.getElementById("sparkline");
+    var text = document.getElementById("timestamp");
+    var diff = document.getElementById("diff");
+    var interval = 300;
+    var tnow = Date.now();
+    text.innerHTML = tnow;
+    t = tnow - interval - old_time;
+    diff.innerHTML = t;
+    old_time = Date.now();
+    if (running) {
+        timer = setTimeout(print_date, interval);
+    }
+    sparkline.sparkline(sl, data);
+    pt = document.getElementById("plot");
+    t = Date.now() - tnow;
+    data.push(t);
+    data.shift();
+    pt.innerHTML = t;
+};
+
+</script>
+</body>
+</html>
