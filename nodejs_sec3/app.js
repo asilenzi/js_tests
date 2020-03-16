@@ -1,7 +1,20 @@
 const http = require('http');
 
-const routes = require('./routes');
+const express = require('express');
 
-const server = http.createServer(routes.handler);
+const pages = require('./pages')
 
-server.listen(3000);
+const app = express();
+
+
+app.use('/create_user', pages.create_user);
+app.use('/users', pages.users);
+app.use('/', pages.index);
+
+app.use((req, res, next) => {
+        routes.handler(req, res);
+        // next();
+    }
+);
+
+app.listen(3000);

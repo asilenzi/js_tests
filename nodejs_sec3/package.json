@@ -1,0 +1,28 @@
+{
+  "name": "nodejs_class",
+  "version": "1.0.0",
+  "description": "NodeJS follow along",
+  "main": "app.js",
+  "scripts": {
+    "test": "jest",
+    "start": "node app.js",
+    "dev-start": "./node_modules/.bin/nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/asilenzi/js_tests.git"
+  },
+  "author": "asilenzi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/asilenzi/js_tests/issues"
+  },
+  "homepage": "https://github.com/asilenzi/js_tests#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "jest": "^25.1.0",
+    "nodemon": "^2.0.2"
+  }
+}
