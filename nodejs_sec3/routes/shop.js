@@ -8,8 +8,8 @@ const index = (req, res, next) => {
     res.write(
       '<body><h1>Welcome to here</h1></body>'
     );
-    res.write('<a href="/users">list users</a><br/>')
-    res.write('<a href="/create_user">create user</a>')
+    res.write('<a href="/shop/users">list users</a><br/>')
+    res.write('<a href="/admin/create_user">create user</a>')
     res.write('</html>');
     return res.end();    
 }
@@ -38,7 +38,7 @@ const users = (req, res, next) => {
           res.write('<ul><li>' + users[i] + '</li></ul>');
         }
       }
-      res.write('<a href="/create_user">create user</a>');
+      res.write('<a href="/admin/create_user">create user</a>');
       res.write('</html>');
     });
 }

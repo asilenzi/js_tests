@@ -10,7 +10,7 @@ const create_user_post = (req, res, next) => {
     err => {
       if (err) throw err;
       res.statusCode = 302;
-      res.setHeader('Location', '/create_user');
+      res.setHeader('Location', '/admin/create_user');
       return res.end();
     }
   );
@@ -20,10 +20,10 @@ const create_user = (req, res, next) => {
   res.write('<html>');
   res.write('<head><title>Enter User</title></head>');
   res.write(
-    '<body><form action="/create_user" method="POST"><input type="text" name="message"><button type="submit">Send</button></form></body>'
+    '<body><form action="/admin/create_user" method="POST"><input type="text" name="message"><button type="submit">Send</button></form></body>'
   );
-  res.write('<a href="/users">list users</a><br/>');
-  res.write('<a href="/create_user">create user</a>');
+  res.write('<a href="/shop/users">list users</a><br/>');
+  res.write('<a href="/admin/create_user">create user</a>');
   res.write('</html>');
   return res.end();
 }

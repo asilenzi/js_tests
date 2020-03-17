@@ -9,8 +9,10 @@ const shop = require('./routes/shop')
 const app = express();
 
 app.use(bodyParser.urlencoded({extended: false}));
-app.use(admin);
-app.use(shop);
+app.use('/admin', admin);
+app.use('/shop', shop);
+
+app.get('/', (req, res, next) => {res.redirect('/shop');});
 
 // 404
 app.use((req, res, next) => {
