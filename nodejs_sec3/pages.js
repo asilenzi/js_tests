@@ -24,26 +24,18 @@ const pageNotFound = (req, res, next) => {
 const create_user = (req, res, next) => {
   const method = req.method;
   if (method === 'POST') {
-    const body = [];
-    req.on('data', chunk => {
-      body.push(chunk);
-    });
-    return req.on('end', () => {
-      const parsedBody = Buffer.concat(body).toString();
-      const message = parsedBody.split('=')[1];
-      // here I should be doing input sanitation
-      fs.writeFile(
-        'users.txt',
-        message + ';',
-        {flag: 'a'},
-        err => {
-          if (err) throw err;
-          res.statusCode = 302;
-          res.setHeader('Location', '/create_user');
-          return res.end();
-        }
-      );
-    });
+    // here I should be doing input sanitation
+    return fs.writeFile(
+      'users.txt',
+      req.body.message + ';',
+      {flag: 'a'},
+      err => {
+        if (err) throw err;
+        res.statusCode = 302;
+        res.setHeader('Location', '/create_user');
+        return res.end();
+      }
+    );
   }
   if (method === 'GET') {
     res.write('<html>');
