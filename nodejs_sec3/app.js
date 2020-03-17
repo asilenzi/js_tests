@@ -13,8 +13,8 @@ app.use(admin);
 app.use(shop);
 
 // 404
-app.use('/', (req, res, next) => {
-  res.send('<html><head><title>Page not found</title><head><body><h1>404</h1></body></html>');
+app.use((req, res, next) => {
+  res.status(404).send('<html><head><title>Page not found</title><head><body><h1>404</h1></body></html>');
 });
 
 app.listen(3000);
