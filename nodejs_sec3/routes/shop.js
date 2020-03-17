@@ -1,5 +1,7 @@
 const fs = require('fs');
 
+const express = require('express');
+
 const index = (req, res, next) => {
     res.write('<html>');
     res.write('<head><title>Welcome to here</title></head>');
@@ -10,41 +12,6 @@ const index = (req, res, next) => {
     res.write('<a href="/create_user">create user</a>')
     res.write('</html>');
     return res.end();    
-}
-
-const pageNotFound = (req, res, next) => {
-    res.setHeader('Content-Type', 'text/html');
-    res.write('<html>');
-    res.write('<head><title>Page not found</title><head>');
-    res.write('<body><h1>404</h1></body>');
-    res.write('</html>');
-    return res.end();
-}
-
-const create_user_post = (req, res, next) => {
-  fs.writeFile(
-    'users.txt',
-    req.body.message + ';',
-    {flag: 'a'},
-    err => {
-      if (err) throw err;
-      res.statusCode = 302;
-      res.setHeader('Location', '/create_user');
-      return res.end();
-    }
-  );
-}
-
-const create_user = (req, res, next) => {
-  res.write('<html>');
-  res.write('<head><title>Enter User</title></head>');
-  res.write(
-    '<body><form action="/create_user" method="POST"><input type="text" name="message"><button type="submit">Send</button></form></body>'
-  );
-  res.write('<a href="/users">list users</a><br/>');
-  res.write('<a href="/create_user">create user</a>');
-  res.write('</html>');
-  return res.end();
 }
 
 const users = (req, res, next) => {
@@ -76,10 +43,8 @@ const users = (req, res, next) => {
     });
 }
 
+const router = express.Router();
+router.get('/users', users);
+router.get('/', index);
 
-
-module.exports.users = users;
-module.exports.index = index;
-module.exports.pageNotFound = pageNotFound;
-module.exports.create_user_post = create_user_post;
-module.exports.create_user = create_user;
+module.exports = router;

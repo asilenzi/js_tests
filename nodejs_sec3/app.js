@@ -3,15 +3,18 @@ const http = require('http');
 const express = require('express');
 const bodyParser = require('body-parser');
 
-const pages = require('./pages')
+const admin = require('./routes/admin')
+const shop = require('./routes/shop')
 
 const app = express();
 
 app.use(bodyParser.urlencoded({extended: false}));
-app.post('/create_user', pages.create_user_post);
-app.get('/create_user', pages.create_user);
-app.get('/users', pages.users);
-app.get('/', pages.index);
-app.use('/', pages.pageNotFound);
+app.use(admin);
+app.use(shop);
+
+// 404
+app.use('/', (req, res, next) => {
+  res.send('<html><head><title>Page not found</title><head><body><h1>404</h1></body></html>');
+});
 
 app.listen(3000);
