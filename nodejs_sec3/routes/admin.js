@@ -1,4 +1,5 @@
 const fs = require('fs');
+const path = require('path');
 
 const express = require('express');
 
@@ -19,12 +20,7 @@ const create_user_post = (req, res, next) => {
 }
 
 const create_user = (req, res, next) => {
-  res.write('<html>');
-  res.write('<head><title>Enter User</title></head>');
-  res.write(
-    '<body><form action="/admin/create_user" method="POST"><input type="text" name="message"><button type="submit">Send</button></form></body>'
-  );
-  return file.list('users.txt',res);
+  res.sendFile(path.join(__dirname, '..', 'views', 'add-product.html'))
 }
 
 const add_product_post = (req, res, next) => {
