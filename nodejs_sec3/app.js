@@ -10,9 +10,13 @@ const shop = require('./routes/shop')
 const app = express();
 
 app.use(bodyParser.urlencoded({extended: false}));
+app.use(express.static(path.join(__dirname, 'public')));
 app.use('/admin', admin);
 app.use('/shop', shop);
 
+app.use('/users', (req, res, next) => {
+  res.sendFile(path.join(__dirname, 'views', 'users.html'));
+});
 app.get('/', (req, res, next) => {res.redirect('/shop');});
 
 // 404

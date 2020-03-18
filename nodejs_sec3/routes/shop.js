@@ -1,6 +1,9 @@
+const path = require('path');
+
 const express = require('express');
 
-const file = require('./file');
+const root_dir = require(path.join('..', 'utils', 'root'));
+const file = require(path.join(root_dir, 'utils', 'file'));
 
 const index = (req, res, next) => {
     res.write('<html>');

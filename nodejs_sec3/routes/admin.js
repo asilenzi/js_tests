@@ -3,7 +3,8 @@ const path = require('path');
 
 const express = require('express');
 
-const file = require('./file');
+const root_dir = require(path.join('..', 'utils', 'root'));
+const file = require(path.join(root_dir, 'utils', 'file'));
 
 const create_user_post = (req, res, next) => {
   fs.writeFile(
