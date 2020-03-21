@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/asilenzi/js_tricks.git"
+    "url": "git+https://github.com/asilenzi/js_tests.git"
   },
   "keywords": [
     "ejs"
@@ -18,9 +18,9 @@
   "author": "Alessandro Silenzi",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/asilenzi/js_tricks/issues"
+    "url": "https://github.com/asilenzi/js_tests/issues"
   },
-  "homepage": "https://github.com/asilenzi/js_tricks#readme",
+  "homepage": "https://github.com/asilenzi/js_tests#readme",
   "dependencies": {
     "ejs": "^3.0.1",
     "express": "^4.17.1"
