@@ -2,13 +2,10 @@ import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-warning-alert',
-  template: '<p class="text-warning">Warning!<\p>',
+  template: '<div class="bg-warning">Warning!</div>',
 })
 export class WarningAlertComponent implements OnInit {
   constructor() {
-    setTimeout(() => {
-      alert("warning");
-    }, 1000);
   }
 
   ngOnInit(): void {
