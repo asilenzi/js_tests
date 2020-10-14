@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-warning-alert',
-  template: ''
+  template: '<p class="text-warning">Warning!<\p>',
 })
 export class WarningAlertComponent implements OnInit {
   constructor() {
