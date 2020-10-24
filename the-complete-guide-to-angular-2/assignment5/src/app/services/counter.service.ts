@@ -1,17 +1,22 @@
 import {EventEmitter, Injectable} from '@angular/core';
 
+import {CounterModel} from '../models/counter.model';
+
 @Injectable({providedIn: "root"})
 export class CounterService {
-    sum: number = 0;
-    new_number: EventEmitter<number>;
-    
-    constructor() {
-        this.new_number = new EventEmitter<number>();
+    update: EventEmitter<void>;
+
+    constructor(public model: CounterModel) {
+        this.update = new EventEmitter();
     }
 
-    count() : void {
-        this.sum++;
-        const new_ = this.sum;
-        this.new_number.emit(new_);
+    countActive() : void {
+        this.model.active++;
+        this.update.emit();
+    }
+
+    countInactive() : void {
+        this.model.inactive++;
+        this.update.emit();
     }
 }

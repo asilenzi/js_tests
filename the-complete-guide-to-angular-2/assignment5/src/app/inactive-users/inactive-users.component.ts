@@ -8,13 +8,10 @@ import { UsersService } from '../services/users.service';
   styleUrls: ['./inactive-users.component.css']
 })
 export class InactiveUsersComponent {
-  users: string[];
-
   constructor(private usersServ: UsersService) {
   }
 
   ngOnInit(){
-    this.users = this.usersServ.inactiveUsers;
   }
 
   onSetToActive(id: number) {

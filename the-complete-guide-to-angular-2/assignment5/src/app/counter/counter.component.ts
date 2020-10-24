@@ -2,6 +2,7 @@ import { ConstantPool } from '@angular/compiler';
 import { Component, OnInit } from '@angular/core';
 
 import { CounterService } from '../services/counter.service';
+import { CounterModel } from '../models/counter.model';
 
 @Component({
   selector: 'app-counter',
@@ -9,20 +10,19 @@ import { CounterService } from '../services/counter.service';
   styleUrls: ['./counter.component.css']
 })
 export class CounterComponent implements OnInit {
-  count: number;
+  model: CounterModel;
   isAlert: boolean = false;
   animationId: number;
 
   constructor(private counter: CounterService) {
-    this.count = this.counter.sum;
   }
 
   ngOnInit(): void {
-    this.counter.new_number.subscribe((new_number: number) => {this.onUpdate(new_number);});
+    this.model = this.counter.model;
+    this.counter.update.subscribe(() => {this.onUpdate();});
   }
 
-  onUpdate(new_number: number): void {
-    this.count = new_number;
+  onUpdate(): void {
     this.isAlert = true;
     if (this.animationId){
       clearTimeout(this.animationId);
